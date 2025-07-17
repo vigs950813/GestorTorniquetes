@@ -1,5 +1,6 @@
 package com.lostresv.view;
 
+import com.lostresv.components.ClockLabel;
 import com.lostresv.util.UIEffects;
 import com.lostresv.components.PlaceholderPasswordField;
 import com.lostresv.components.PlaceholderTextField;
@@ -26,6 +27,7 @@ public class Login extends JFrame {
         setSize(400, 430);
         setLocationRelativeTo(null);
         setLayout(null);
+        setResizable(false); // recommended to avoid layout issues
         getContentPane().setBackground(new Color(240, 240, 240)); // Gris claro
 
         // ---------- Título ----------
@@ -84,6 +86,18 @@ public class Login extends JFrame {
 
         UIEffects.aplicarBordeFocus(textUsuario, Color.GRAY, new Color(0x00AFC1));
         UIEffects.aplicarBordeFocus(textPassword, Color.GRAY, new Color(0x00AFC1));
+        
+                // ---------- Clock in bottom-right corner ----------
+        ClockLabel clock = new ClockLabel();
+                // ---------- Clock icon ----------
+        ImageIcon clockIcon = ImageLoader.cargarIcono("/icons/clock.png", "🕒", 20, 20);
+        JLabel clockLabel = new JLabel(clockIcon);
+        clockLabel.setBounds(getWidth() - 185, getHeight() - 83, 20, 20); // Adjust for spacing
+        add(clockLabel);
+
+        clock.setBounds(getWidth() - 160, getHeight() - 80, 140, 20); // Adjust margin
+        add(clock);
+
 
     }
 
