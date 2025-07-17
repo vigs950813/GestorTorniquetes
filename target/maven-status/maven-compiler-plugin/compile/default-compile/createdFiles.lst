@@ -1,6 +1,13 @@
-com\lostresv\view\Login$1.class
-com\lostresv\util\ImageLoader.class
+com\lostresv\util\UIEffects$2.class
+com\lostresv\components\PlaceholderTextField$1.class
 com\lostresv\util\PopUpHelper.class
 com\lostresv\main\GestorTorniquetes.class
-com\lostresv\view\Login$2.class
+com\losrtresv\model\User.class
+com\lostresv\util\UIEffects$3.class
+com\lostresv\components\PlaceholderTextField.class
 com\lostresv\view\Login.class
+com\lostresv\util\UIEffects.class
+com\lostresv\components\PlaceholderPasswordField.class
+com\lostresv\components\PlaceholderPasswordField$1.class
+com\lostresv\util\ImageLoader.class
+com\lostresv\util\UIEffects$1.class
