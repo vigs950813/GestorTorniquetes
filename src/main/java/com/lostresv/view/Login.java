@@ -81,11 +81,11 @@ public class Login extends JFrame {
         botonIniciar.setBackground(colorNormal);
 
         // Hover mientras pasa el mouse
-        UIEffects.agregarHover(botonIniciar, colorNormal, colorHover);
-        UIEffects.agregarPressedEffect(botonIniciar, colorPressed);
+        UIEffects.addHover(botonIniciar, colorNormal, colorHover);
+        UIEffects.addPressedEffect(botonIniciar, colorPressed);
 
-        UIEffects.aplicarBordeFocus(textUsuario, Color.GRAY, new Color(0x00AFC1));
-        UIEffects.aplicarBordeFocus(textPassword, Color.GRAY, new Color(0x00AFC1));
+        UIEffects.applyBorderFocus(textUsuario, Color.GRAY, new Color(0x00AFC1));
+        UIEffects.applyBorderFocus(textPassword, Color.GRAY, new Color(0x00AFC1));
         
                 // ---------- Clock in bottom-right corner ----------
         ClockLabel clock = new ClockLabel();
@@ -106,9 +106,9 @@ public class Login extends JFrame {
         String clave = textPassword.getRealText();
 
         if (usuario.isEmpty() || clave.isEmpty()) {
-            PopUpHelper.advertencia(this, "Por favor ingresa usuario y contraseña válidos.", "Validación");
+            PopUpHelper.warning(this, "Por favor ingresa usuario y contraseña válidos.", "Alerta");
         } else {
-            PopUpHelper.exito(this, "Inicio de sesión exitoso (simulado)", "Bienvenido");
+            PopUpHelper.success(this, "Inicio de sesión exitoso (simulado)", "Bienvenido");
             // Aquí puedes abrir la siguiente ventana según el rol
         }
     }

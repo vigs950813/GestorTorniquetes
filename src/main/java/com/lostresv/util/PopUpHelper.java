@@ -11,83 +11,83 @@ import java.awt.*;
  */
 public class PopUpHelper {
 
-    private static final Color COLOR_PRIMARIO = new Color(0x00AFC1);
-    private static final Font  FUENTE         = new Font("Segoe UI", Font.PLAIN, 14);
+    private static final Color PRIMARY_COLOR = new Color(0x00AFC1);
+    private static final Font  FONT         = new Font("Segoe UI", Font.PLAIN, 14);
 
     /* -------------------- API PÚBLICA (PALETA POR DEFECTO) -------------------- */
 
-    public static void advertencia(Component parent, String mensaje, String titulo) {
-        mostrarDialogo(parent, mensaje, titulo, JOptionPane.WARNING_MESSAGE, COLOR_PRIMARIO, new Color(0x008391));
+    public static void warning(Component parent, String message, String title) {
+        showDialog(parent, message, title, JOptionPane.WARNING_MESSAGE, PRIMARY_COLOR, new Color(0x008391));
     }
 
-    public static void informacion(Component parent, String mensaje, String titulo) {
-        mostrarDialogo(parent, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE, COLOR_PRIMARIO, new Color(0x008391));
+    public static void information(Component parent, String message, String title) {
+        showDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE, PRIMARY_COLOR, new Color(0x008391));
     }
 
-    public static void error(Component parent, String mensaje, String titulo) {
-        mostrarDialogo(parent, mensaje, titulo, JOptionPane.ERROR_MESSAGE, COLOR_PRIMARIO, new Color(0x008391));
+    public static void error(Component parent, String message, String title) {
+        showDialog(parent, message, title, JOptionPane.ERROR_MESSAGE, PRIMARY_COLOR, new Color(0x008391));
     }
 
-    public static void exito(Component parent, String mensaje, String titulo) {
-        mostrarDialogo(parent, mensaje, titulo, JOptionPane.PLAIN_MESSAGE, COLOR_PRIMARIO, new Color(0x008391));
+    public static void success(Component parent, String message, String title) {
+        showDialog(parent, message, title, JOptionPane.PLAIN_MESSAGE, PRIMARY_COLOR, new Color(0x008391));
     }
 
-    public static boolean confirmacion(Component parent, String mensaje, String titulo) {
-        return confirmacion(parent, mensaje, titulo, COLOR_PRIMARIO, new Color(0x008391));
+    public static boolean confirmation(Component parent, String message, String title) {
+        return confirmation(parent, message, title, PRIMARY_COLOR, new Color(0x008391));
     }
 
-    public static String entradaTexto(Component parent, String mensaje, String titulo) {
-        return entradaTexto(parent, mensaje, titulo, COLOR_PRIMARIO, new Color(0x008391));
+    public static String inputText(Component parent, String message, String title) {
+        return inputText(parent, message, title, PRIMARY_COLOR, new Color(0x008391));
     }
 
 
     /* -------------------- API PÚBLICA (COLORES PERSONALIZADOS) -------------------- */
 
-    public static void advertencia(Component parent, String mensaje, String titulo,
-                                   Color colorBoton, Color colorBorde) {
-        mostrarDialogo(parent, mensaje, titulo, JOptionPane.WARNING_MESSAGE, colorBoton, colorBorde);
+    public static void warning(Component parent, String message, String title,
+                                   Color buttonColor, Color borderColor) {
+        showDialog(parent, message, title, JOptionPane.WARNING_MESSAGE, buttonColor, borderColor);
     }
 
-    public static void informacion(Component parent, String mensaje, String titulo,
-                                   Color colorBoton, Color colorBorde) {
-        mostrarDialogo(parent, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE, colorBoton, colorBorde);
+    public static void information(Component parent, String message, String title,
+                                   Color buttonColor, Color borderColor) {
+        showDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE, buttonColor, borderColor);
     }
 
-    public static void error(Component parent, String mensaje, String titulo,
-                             Color colorBoton, Color colorBorde) {
-        mostrarDialogo(parent, mensaje, titulo, JOptionPane.ERROR_MESSAGE, colorBoton, colorBorde);
+    public static void error(Component parent, String message, String title,
+                             Color buttonColor, Color borderColor) {
+        showDialog(parent, message, title, JOptionPane.ERROR_MESSAGE, buttonColor, borderColor);
     }
 
-    public static void exito(Component parent, String mensaje, String titulo,
-                             Color colorBoton, Color colorBorde) {
-        mostrarDialogo(parent, mensaje, titulo, JOptionPane.PLAIN_MESSAGE, colorBoton, colorBorde);
+    public static void success(Component parent, String message, String title,
+                             Color buttonColor, Color borderColor) {
+        showDialog(parent, message, title, JOptionPane.PLAIN_MESSAGE, buttonColor, borderColor);
     }
 
-    public static boolean confirmacion(Component parent, String mensaje, String titulo,
-                                       Color colorBoton, Color colorBorde) {
-        aplicarEstilosTemporal(parent, colorBoton, colorBorde);
-        int resultado = JOptionPane.showConfirmDialog(parent, mensaje, titulo,
+    public static boolean confirmation(Component parent, String message, String title,
+                                       Color buttonColor, Color borderColor) {
+        applyTemporaryStyle(parent, buttonColor, borderColor);
+        int resultado = JOptionPane.showConfirmDialog(parent, message, title,
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        restaurarEstilos();
+        restoreStyle();
         return resultado == JOptionPane.YES_OPTION;
     }
 
-    public static String entradaTexto(Component parent, String mensaje, String titulo,
-                                      Color colorBoton, Color colorBorde) {
-        aplicarEstilosTemporal(parent, colorBoton, colorBorde);
-        String resp = JOptionPane.showInputDialog(parent, mensaje, titulo, JOptionPane.PLAIN_MESSAGE);
-        restaurarEstilos();
+    public static String inputText(Component parent, String message, String title,
+                                      Color buttonColor, Color borderColor) {
+        applyTemporaryStyle(parent, buttonColor, borderColor);
+        String resp = JOptionPane.showInputDialog(parent, message, title, JOptionPane.PLAIN_MESSAGE);
+        restoreStyle();
         return resp;
     }
 
 
     /* -------------------- IMPLEMENTACIÓN CENTRAL -------------------- */
 
-    private static void mostrarDialogo(Component parent, String mensaje, String titulo,
-                                       int tipo, Color colorBoton, Color colorBorde) {
-        aplicarEstilosTemporal(parent, colorBoton, colorBorde);
-        JOptionPane.showMessageDialog(parent, mensaje, titulo, tipo);
-        restaurarEstilos();
+    private static void showDialog(Component parent, String message, String title,
+                                       int tipo, Color buttonColor, Color borderColor) {
+        applyTemporaryStyle(parent, buttonColor, borderColor);
+        JOptionPane.showMessageDialog(parent, message, title, tipo);
+        restoreStyle();
     }
 
 
@@ -102,7 +102,7 @@ public class PopUpHelper {
     private static Object oldBtnFont;
     private static Object oldBtnBorder;
 
-    private static void aplicarEstilosTemporal(Component parent, Color colorBoton, Color colorBorde) {
+    private static void applyTemporaryStyle(Component parent, Color buttonColor, Color borderColor) {
         // Guardar viejos valores
         oldMsgFg   = UIManager.get("OptionPane.messageForeground");
         oldPanelBg = UIManager.get("Panel.background");
@@ -113,20 +113,20 @@ public class PopUpHelper {
         oldBtnBorder = UIManager.get("Button.border");
 
         Color backgroundColor = (parent != null) ? parent.getBackground() : Color.WHITE;
-        Border borde = new LineBorder(colorBorde, 1, true);
+        Border borde = new LineBorder(borderColor, 1, true);
 
         UIManager.put("OptionPane.messageForeground", Color.DARK_GRAY);
         UIManager.put("Panel.background", backgroundColor);
-        UIManager.put("Button.background", colorBoton);
+        UIManager.put("Button.background", buttonColor);
         UIManager.put("Button.foreground", Color.WHITE);
-        UIManager.put("OptionPane.messageFont", FUENTE);
-        UIManager.put("Button.font", FUENTE);
+        UIManager.put("OptionPane.messageFont", FONT);
+        UIManager.put("Button.font", FONT);
         UIManager.put("Button.border", borde);
         // Desactiva focus pintado si prefieres menos ruido visual:
         UIManager.put("Button.focusPainted", Boolean.FALSE);
     }
 
-    private static void restaurarEstilos() {
+    private static void restoreStyle() {
         UIManager.put("OptionPane.messageForeground", oldMsgFg);
         UIManager.put("Panel.background",            oldPanelBg);
         UIManager.put("Button.background",            oldBtnBg);

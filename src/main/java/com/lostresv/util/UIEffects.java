@@ -13,59 +13,59 @@ public class UIEffects {
     /**
      * Aplica efecto hover y clic a un botón.
      *
-     * @param boton JButton al que se aplican los eventos.
-     * @param colorNormal Color por defecto.
-     * @param colorHover Color al pasar el mouse.
+     * @param button JButton al que se aplican los eventos.
+     * @param normalColor Color por defecto.
+     * @param hoverColor Color al pasar el mouse.
      * @param colorPressed Color al presionar clic.
      */
-    public static void agregarHover(JButton boton, Color colorNormal, Color colorHover) {
-        boton.setBackground(colorNormal);
+    public static void addHover(JButton button, Color normalColor, Color hoverColor) {
+        button.setBackground(normalColor);
 
-        boton.addMouseListener(new MouseAdapter() {
+        button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                boton.setBackground(colorHover);
+                button.setBackground(hoverColor);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                boton.setBackground(colorNormal);
+                button.setBackground(normalColor);
             }
         });
     }
 
-    public static void agregarPressedEffect(JButton boton, Color colorPressed) {
-        boton.addMouseListener(new MouseAdapter() {
+    public static void addPressedEffect(JButton button, Color colorPressed) {
+        button.addMouseListener(new MouseAdapter() {
             private Color originalColor;
 
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
-                    originalColor = boton.getBackground();
-                    boton.setBackground(colorPressed);
+                    originalColor = button.getBackground();
+                    button.setBackground(colorPressed);
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (originalColor != null) {
-                    boton.setBackground(originalColor);
+                    button.setBackground(originalColor);
                 }
             }
         });
     }
 
-    public static void aplicarBordeFocus(JComponent componente, Color bordeNormal, Color bordeFocus) {
-        componente.setBorder(new LineBorder(bordeNormal, 1, true));
-        componente.addFocusListener(new FocusAdapter() {
+    public static void applyBorderFocus(JComponent component, Color normalBorder, Color focusBorder) {
+        component.setBorder(new LineBorder(normalBorder, 1, true));
+        component.addFocusListener(new FocusAdapter() {
             @Override
             public void focusGained(FocusEvent e) {
-                componente.setBorder(new LineBorder(bordeFocus, 1, true));
+                component.setBorder(new LineBorder(focusBorder, 1, true));
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                componente.setBorder(new LineBorder(bordeNormal, 1, true));
+                component.setBorder(new LineBorder(normalBorder, 1, true));
             }
         });
     }
