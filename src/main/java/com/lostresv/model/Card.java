@@ -59,4 +59,8 @@ public class Card {
         return String.format("Card[ID: %d, UID: %s, Active: %b, UserID: %d, Issued: %s]",
                 id, uid, active, userId, issueDate.toString());
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

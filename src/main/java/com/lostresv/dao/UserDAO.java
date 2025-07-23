@@ -1,80 +1,74 @@
-// File: com/lostresv/dao/UserDAO.java
 package com.lostresv.dao;
 
-import com.lostresv.model.*;
-import com.lostresv.util.DatabaseConnection;
-
+import com.lostresv.factory.UserFactorySelector;
+import com.lostresv.model.User;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class UserDAO {
 
-    public User authenticate(String username, String password) throws SQLException {
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            // 1. Try administrator
-            String adminQuery = "SELECT a.user_id, a.password, u.name, u.creation_date, u.user_type, c.id as card_id, c.uid, c.active, c.issue_date "
-                    + "FROM administrator a "
-                    + "JOIN app_user u ON a.user_id = u.id "
-                    + "LEFT JOIN card c ON u.id = c.user_id "
-                    + "WHERE a.username = ? AND a.password = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(adminQuery)) {
-                stmt.setString(1, username);
-                stmt.setString(2, password);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        return mapAdministrator(rs);
-                    }
-                }
-            }
+    private Connection connection;
 
-            // 2. Try employee
-            String employeeQuery = "SELECT e.user_id, e.password, u.name, u.creation_date, u.user_type, c.id as card_id, c.uid, c.active, c.issue_date "
-                    + "FROM employee e "
-                    + "JOIN app_user u ON e.user_id = u.id "
-                    + "LEFT JOIN card c ON u.id = c.user_id "
-                    + "WHERE e.username = ? AND e.password = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(employeeQuery)) {
-                stmt.setString(1, username);
-                stmt.setString(2, password);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    if (rs.next()) {
-                        return mapEmployee(rs);
-                    }
-                }
+    public UserDAO(Connection connection) {
+        this.connection = connection;
+    }
+
+    public int insert(User user) throws SQLException {
+        String sql = "INSERT INTO app_user (name, creation_date, user_type) VALUES (?, ?, ?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, user.getName());
+            stmt.setDate(2, new java.sql.Date(user.getCreationDate().getTime()));
+            stmt.setString(3, user.getUserType());
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1); // new user ID
             }
         }
+        return -1;
+    }
 
+    public User findById(int id) throws SQLException {
+        String sql = "SELECT * FROM app_user WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return UserFactorySelector.createUserByType(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDate("creation_date"),
+                        rs.getString("user_type")
+                );
+            }
+        }
         return null;
     }
 
-    private Administrator mapAdministrator(ResultSet rs) throws SQLException {
-        int id = rs.getInt("user_id");
-        String name = rs.getString("name");
-        Date creationDate = rs.getDate("creation_date");
-        String password = rs.getString("password");
-        String username = rs.getString("username"); // only works if you include this in SELECT
-        Card card = buildCard(rs, id);
-        return new Administrator(id, name, creationDate, card, username, password);
-    }
-
-    private Employee mapEmployee(ResultSet rs) throws SQLException {
-        int id = rs.getInt("user_id");
-        String name = rs.getString("name");
-        Date creationDate = rs.getDate("creation_date");
-        String password = rs.getString("password");
-        String username = rs.getString("username"); // only works if you include this in SELECT
-        Card card = buildCard(rs, id);
-        return new Employee(id, name, creationDate, card, username, password);
-    }
-
-    private Card buildCard(ResultSet rs, int userId) throws SQLException {
-        int cardId = rs.getInt("card_id");
-        if (rs.wasNull()) {
-            return null; // No card registered
+    public List<User> findAll() throws SQLException {
+        String sql = "SELECT * FROM app_user";
+        List<User> users = new ArrayList<>();
+        try (Statement stmt = connection.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                users.add(UserFactorySelector.createUserByType(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getDate("creation_date"),
+                        rs.getString("user_type")
+                ));
+            }
         }
-        String uid = rs.getString("uid");
-        boolean active = rs.getBoolean("active");
-        Date issueDate = rs.getDate("issue_date");
-        return new Card(cardId, uid, active, userId, issueDate);
+        return users;
+    }
+
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM app_user WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
     }
 }

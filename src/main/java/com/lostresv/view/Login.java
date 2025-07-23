@@ -4,6 +4,14 @@ import com.lostresv.components.ClockLabel;
 import com.lostresv.util.UIEffects;
 import com.lostresv.components.PlaceholderPasswordField;
 import com.lostresv.components.PlaceholderTextField;
+
+import com.lostresv.model.User;
+import com.lostresv.model.Employee;
+import com.lostresv.model.Administrator;
+
+import java.sql.Connection;
+
+import com.lostresv.service.LoginService;
 import com.lostresv.util.ImageLoader;
 import com.lostresv.util.PopUpHelper;
 
@@ -16,8 +24,10 @@ public class Login extends JFrame {
     private PlaceholderTextField userText;
     private PlaceholderPasswordField passwordText;
     private JButton loginButton;
+    private LoginService loginService;
 
-    public Login() {
+    public Login(Connection connection) {
+        this.loginService = new LoginService(connection);
         initComponents();
     }
 
@@ -71,7 +81,7 @@ public class Login extends JFrame {
         loginButton.setFocusPainted(false);
         loginButton.setBorderPainted(false);
         loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        loginButton.addActionListener(e -> validarDatos());
+        loginButton.addActionListener(e -> handleLogin());
         add(loginButton);
 
         Color colorNormal = new Color(0x00AFC1);
@@ -86,10 +96,10 @@ public class Login extends JFrame {
 
         UIEffects.applyBorderFocus(userText, Color.GRAY, new Color(0x00AFC1));
         UIEffects.applyBorderFocus(passwordText, Color.GRAY, new Color(0x00AFC1));
-        
-                // ---------- Clock in bottom-right corner ----------
+
+        // ---------- Clock in bottom-right corner ----------
         ClockLabel clock = new ClockLabel();
-                // ---------- Clock icon ----------
+        // ---------- Clock icon ----------
         ImageIcon clockIcon = ImageLoader.loadIcon("/icons/clock.png", "🕒", 20, 20);
         JLabel clockLabel = new JLabel(clockIcon);
         clockLabel.setBounds(getWidth() - 185, getHeight() - 83, 20, 20); // Adjust for spacing
@@ -98,18 +108,50 @@ public class Login extends JFrame {
         clock.setBounds(getWidth() - 160, getHeight() - 80, 140, 20); // Adjust margin
         add(clock);
 
-
     }
 
-    private void validarDatos() {
-        String usuario = userText.getRealText();
-        String clave = passwordText.getRealText();
+    private void handleLogin() {
+        String username = userText.getText().trim();
+        String password = new String(passwordText.getPassword()).trim();
 
-        if (usuario.isEmpty() || clave.isEmpty()) {
-            PopUpHelper.warning(this, "Por favor ingresa usuario y contraseña válidos.", "Alerta");
-        } else {
-            PopUpHelper.success(this, "Inicio de sesión exitoso (simulado)", "Bienvenido");
-            // Aquí puedes abrir la siguiente ventana según el rol
+        if (username.isEmpty() || password.isEmpty()) {
+            PopUpHelper.warning(this, "Please enter both username and password.", "Alerta");
+            return;
         }
+
+        loginButton.setEnabled(false); // block UI button
+
+        SwingWorker<Void, Void> worker = new SwingWorker<>() {
+            private User user;
+
+            @Override
+            protected Void doInBackground() {
+                try {
+                    user = loginService.authenticate(username, password);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    PopUpHelper.error(Login.this, "Login error: " + e.getMessage(), "Error");
+                }
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                loginButton.setEnabled(true); // re-enable after attempt
+
+                if (user == null) {
+                    PopUpHelper.error(Login.this, "Invalid credentials. Try again.", "Error");
+                } else if (user instanceof Administrator) {
+                    PopUpHelper.information(Login.this, "Welcome Administrator: " + user.getName(), "Informacion");
+                    // TODO: load Admin dashboard
+                } else if (user instanceof Employee) {
+                    PopUpHelper.information(Login.this, "Welcome Employee: " + user.getName(), "Informacion");
+                    // TODO: load Employee dashboard
+                }
+            }
+        };
+
+        worker.execute(); // run the login logic in the background
     }
+
 }
