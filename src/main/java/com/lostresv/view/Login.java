@@ -100,13 +100,20 @@ public class Login extends JFrame {
         // ---------- Clock in bottom-right corner ----------
         ClockLabel clock = new ClockLabel();
         // ---------- Clock icon ----------
+        // ---------- Clock in bottom-right corner ----------
         ImageIcon clockIcon = ImageLoader.loadIcon("/icons/clock.png", "🕒", 20, 20);
-        JLabel clockLabel = new JLabel(clockIcon);
-        clockLabel.setBounds(getWidth() - 185, getHeight() - 83, 20, 20); // Adjust for spacing
-        add(clockLabel);
+        // Create panel to hold icon and clock aligned properly
+        JPanel clockPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        clockPanel.setOpaque(false);
+        clockPanel.setBounds(180, 360, 180, 30);  // adjust Y position for good bottom alignment
 
-        clock.setBounds(getWidth() - 160, getHeight() - 80, 140, 20); // Adjust margin
-        add(clock);
+        JLabel clockIconLabel = new JLabel(clockIcon);
+        clockIconLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+        clock.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        clockPanel.add(clockIconLabel);
+        clockPanel.add(clock);
+        add(clockPanel);
 
     }
 
@@ -141,7 +148,7 @@ public class Login extends JFrame {
 
                 if (user == null) {
                     PopUpHelper.error(Login.this, "Datos incorrectos, intenta de nuevo.", "Error");
-                } else if (user instanceof Administrator) {              
+                } else if (user instanceof Administrator) {
                     PopUpHelper.information(Login.this, "Bienvenido Administrador: " + user.getName(), "Informacion");
                     dispose();
                     new Dashboard(user).setVisible(true);
