@@ -1,15 +1,21 @@
 package com.lostresv.view;
 
 import com.lostresv.components.ClockLabel;
+import com.lostresv.model.User;
 import com.lostresv.util.ImageLoader;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Dashboard extends JFrame {
-
-    public Dashboard() {
-        setTitle("Dashboard");
+    
+    private User user;
+    
+    public Dashboard(User user) {
+        this.user = user;
+        
+        
+        setTitle("Panel de control - Administrador " + user.getName());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 600);
         setLocationRelativeTo(null);
@@ -20,8 +26,8 @@ public class Dashboard extends JFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Add three columns with custom icons
-        mainPanel.add(createColumnPanel("Users", "/icons/users.png", new String[]{"Add User", "Edit User", "Delete User"}));
-        mainPanel.add(createColumnPanel("Access Points", "/icons/access.png", new String[]{"Add Turnstile", "Edit Turnstile", "Logs"}));
+        mainPanel.add(createColumnPanel("Users", "/icons/user.png", new String[]{"Agregar Usuario", "Editar Usuario", "Borrar Usuario"}));
+        mainPanel.add(createColumnPanel("Access Points", "/icons/access.png", new String[]{"Agregar Torniquete", "Editar Torniquete", "Eliminar Torniquete"}));
         mainPanel.add(createThirdColumnPanel());
 
         add(mainPanel, BorderLayout.CENTER);
@@ -66,7 +72,7 @@ public class Dashboard extends JFrame {
         thirdColumn.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Top: Title + image + buttons
-        JPanel topPanel = createColumnPanel("System", "/icons/system.png", new String[]{"Status", "Reports", "Settings"});
+        JPanel topPanel = createColumnPanel("System", "/icons/system.png", new String[]{"Estatus", "Reportes", "Cerrar Sesión"});
         thirdColumn.add(topPanel, BorderLayout.CENTER);
 
         // Bottom-right clock
@@ -77,9 +83,4 @@ public class Dashboard extends JFrame {
         return thirdColumn;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new Dashboard().setVisible(true);
-        });
-    }
 }

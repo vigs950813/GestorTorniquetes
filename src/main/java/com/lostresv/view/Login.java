@@ -66,14 +66,14 @@ public class Login extends JFrame {
         add(userText);
 
         // ---------- Campo Contraseña ----------
-        passwordText = new PlaceholderPasswordField("Password");
+        passwordText = new PlaceholderPasswordField("Contraseña");
         passwordText.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         passwordText.setBounds(75, 150, 260, 40);
         passwordText.setBorder(new LineBorder(Color.GRAY, 1, true));
         add(passwordText);
 
         // ---------- Botón Login ----------
-        loginButton = new JButton("Log in");
+        loginButton = new JButton("Iniciar Sesión");
         loginButton.setBounds(30, 220, 310, 45);
         loginButton.setBackground(new Color(0x00AFC1));
         loginButton.setForeground(Color.WHITE);
@@ -115,7 +115,7 @@ public class Login extends JFrame {
         String password = new String(passwordText.getPassword()).trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            PopUpHelper.warning(this, "Please enter both username and password.", "Alerta");
+            PopUpHelper.warning(this, "Los campos están vacíos.", "Alerta");
             return;
         }
 
@@ -140,13 +140,15 @@ public class Login extends JFrame {
                 loginButton.setEnabled(true); // re-enable after attempt
 
                 if (user == null) {
-                    PopUpHelper.error(Login.this, "Invalid credentials. Try again.", "Error");
-                } else if (user instanceof Administrator) {
-                    PopUpHelper.information(Login.this, "Welcome Administrator: " + user.getName(), "Informacion");
-                    // TODO: load Admin dashboard
+                    PopUpHelper.error(Login.this, "Datos incorrectos, intenta de nuevo.", "Error");
+                } else if (user instanceof Administrator) {              
+                    PopUpHelper.information(Login.this, "Bienvenido Administrador: " + user.getName(), "Informacion");
+                    dispose();
+                    new Dashboard(user).setVisible(true);
                 } else if (user instanceof Employee) {
-                    PopUpHelper.information(Login.this, "Welcome Employee: " + user.getName(), "Informacion");
-                    // TODO: load Employee dashboard
+                    PopUpHelper.information(Login.this, "Bienvenido: " + user.getName(), "Informacion");
+                    dispose();
+                    new Dashboard(user).setVisible(true);
                 }
             }
         };
