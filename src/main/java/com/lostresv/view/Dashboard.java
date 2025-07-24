@@ -3,6 +3,7 @@ package com.lostresv.view;
 import com.lostresv.components.ClockLabel;
 import com.lostresv.model.User;
 import com.lostresv.util.ImageLoader;
+import com.lostresv.util.UIEffects;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,8 +66,8 @@ public class Dashboard extends JFrame {
 
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
-            button.setFont(new Font("Segoe UI", Font.PLAIN, 16));
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            UIEffects.styleButton(button);
             columnPanel.add(button);
             columnPanel.add(Box.createVerticalStrut(10));
         }
@@ -95,8 +96,8 @@ public class Dashboard extends JFrame {
         String[] systemButtons = {"Estado", "Reportes", "Configuración", "Cerrar Sesión"};
         for (String label : systemButtons) {
             JButton button = new JButton(label);
-            button.setFont(new Font("Segoe UI", Font.PLAIN, 16));
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            UIEffects.styleButton(button);
             thirdColumnPanel.add(button);
             thirdColumnPanel.add(Box.createVerticalStrut(10));
         }
