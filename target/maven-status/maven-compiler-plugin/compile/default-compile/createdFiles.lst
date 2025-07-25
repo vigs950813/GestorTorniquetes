@@ -28,5 +28,6 @@ com\lostresv\util\UIEffects.class
 com\lostresv\components\PlaceholderPasswordField.class
 com\lostresv\components\PlaceholderPasswordField$1.class
 com\lostresv\factory\EmployeeFactory.class
+com\lostresv\util\Generator.class
 com\lostresv\model\User.class
 com\lostresv\view\Dashboard.class

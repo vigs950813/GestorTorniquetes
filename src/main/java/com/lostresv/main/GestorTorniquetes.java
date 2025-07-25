@@ -3,7 +3,6 @@ package com.lostresv.main;
 import javax.swing.SwingUtilities;
 import com.lostresv.view.Login;
 import com.lostresv.util.DatabaseConnection;
-
 import java.sql.Connection;
 
 public class GestorTorniquetes {
