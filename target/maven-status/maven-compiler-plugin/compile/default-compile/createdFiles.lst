@@ -2,6 +2,7 @@ com\lostresv\model\Employee.class
 com\lostresv\main\GestorTorniquetes.class
 com\lostresv\model\Card.class
 com\lostresv\util\UIEffects$3.class
+com\lostresv\view\UserFormulary$1.class
 com\lostresv\components\PlaceholderTextField.class
 com\lostresv\dao\EmployeeDAO.class
 com\lostresv\model\Visitor.class
@@ -15,6 +16,7 @@ com\lostresv\components\ClockLabel.class
 com\lostresv\util\UIEffects$1.class
 com\lostresv\factory\UserFactorySelector.class
 com\lostresv\util\UIEffects$2.class
+com\lostresv\view\UserFormulary.class
 com\lostresv\components\PlaceholderTextField$1.class
 com\lostresv\util\PopUpHelper.class
 com\lostresv\dao\UserDAO.class
