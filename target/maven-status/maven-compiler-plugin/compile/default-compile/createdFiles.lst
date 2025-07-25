@@ -2,7 +2,6 @@ com\lostresv\model\Employee.class
 com\lostresv\main\GestorTorniquetes.class
 com\lostresv\model\Card.class
 com\lostresv\util\UIEffects$3.class
-com\lostresv\view\UserFormulary$1.class
 com\lostresv\components\PlaceholderTextField.class
 com\lostresv\dao\EmployeeDAO.class
 com\lostresv\model\Visitor.class

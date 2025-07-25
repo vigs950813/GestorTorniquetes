@@ -1,10 +1,9 @@
 package com.lostresv.view;
 
+import com.lostresv.util.UIEffects;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 
 public class UserFormulary extends JPanel {
     private JTextField nameField;
@@ -13,69 +12,66 @@ public class UserFormulary extends JPanel {
     private JComboBox<String> userTypeCombo;
     private JTextField cardUidField;
     private JButton submitButton;
+    private JButton returnButton;
 
-    public UserFormulary() {
+    public UserFormulary(Runnable onReturn) {
         setLayout(new GridBagLayout());
+        setPreferredSize(new Dimension(500, 400)); // Enlarged panel
+
         GridBagConstraints gbc = new GridBagConstraints();
 
-        JLabel nameLabel = new JLabel("Nombre:");
+        JLabel nameLabel = new JLabel("Name:");
         nameField = new JTextField(15);
 
-        JLabel usernameLabel = new JLabel("Usuario:");
+        JLabel usernameLabel = new JLabel("Username:");
         usernameField = new JTextField(15);
 
-        JLabel passwordLabel = new JLabel("Contraseña:");
+        JLabel passwordLabel = new JLabel("Password:");
         passwordField = new JPasswordField(15);
 
-        JLabel userTypeLabel = new JLabel("Tipo de usuario:");
-        String[] userTypes = {"Administrador", "empleado", "Visitante"};
+        JLabel userTypeLabel = new JLabel("User Type:");
+        String[] userTypes = {"Administrator", "Employee", "Visitor"};
         userTypeCombo = new JComboBox<>(userTypes);
 
         JLabel cardUidLabel = new JLabel("Card UID:");
         cardUidField = new JTextField(15);
 
-        submitButton = new JButton("Crear Usuario");
+        submitButton = new JButton("Create User");
+        returnButton = new JButton("← Return");
 
-        // Layout
+        // Style buttons
+        UIEffects.addHover(submitButton, new Color(70, 130, 180), new Color(100, 149, 237));
+        UIEffects.addPressedEffect(submitButton, new Color(65, 105, 225));
+
+        UIEffects.addHover(returnButton, new Color(200, 200, 200), new Color(220, 220, 220));
+        UIEffects.addPressedEffect(returnButton, new Color(180, 180, 180));
+
+        // Layout setup
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0; gbc.gridy = 0;
-        add(nameLabel, gbc);
-        gbc.gridx = 1;
-        add(nameField, gbc);
-
+        add(nameLabel, gbc);      gbc.gridx = 1; add(nameField, gbc);
         gbc.gridx = 0; gbc.gridy++;
-        add(usernameLabel, gbc);
-        gbc.gridx = 1;
-        add(usernameField, gbc);
-
+        add(usernameLabel, gbc);  gbc.gridx = 1; add(usernameField, gbc);
         gbc.gridx = 0; gbc.gridy++;
-        add(passwordLabel, gbc);
-        gbc.gridx = 1;
-        add(passwordField, gbc);
-
+        add(passwordLabel, gbc);  gbc.gridx = 1; add(passwordField, gbc);
         gbc.gridx = 0; gbc.gridy++;
-        add(userTypeLabel, gbc);
-        gbc.gridx = 1;
-        add(userTypeCombo, gbc);
-
+        add(userTypeLabel, gbc);  gbc.gridx = 1; add(userTypeCombo, gbc);
         gbc.gridx = 0; gbc.gridy++;
-        add(cardUidLabel, gbc);
-        gbc.gridx = 1;
-        add(cardUidField, gbc);
+        add(cardUidLabel, gbc);   gbc.gridx = 1; add(cardUidField, gbc);
 
         gbc.gridx = 0; gbc.gridy++; gbc.gridwidth = 2;
         add(submitButton, gbc);
 
-        // Behavior
-        userTypeCombo.addActionListener(e -> toggleCardField());
-        toggleCardField(); // Initial visibility
+        gbc.gridy++;
+        add(returnButton, gbc); // ⬅️ Add the return button to UI
 
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleCreateUser();
-            }
-        });
+        userTypeCombo.addActionListener(e -> toggleCardField());
+
+        // Ensure correct initial visibility for card UID field based on selected user type
+        toggleCardField();
+
+        submitButton.addActionListener(e -> handleCreateUser());
+        returnButton.addActionListener(e -> onReturn.run());
     }
 
     private void toggleCardField() {
@@ -91,22 +87,8 @@ public class UserFormulary extends JPanel {
         String userType = (String) userTypeCombo.getSelectedItem();
         String cardUid = cardUidField.getText();
 
-        // Here you should call your controller or service layer
-        System.out.println("Creando usuario");
+        System.out.println("Creating user:");
         System.out.printf("Name: %s, Username: %s, Password: %s, Type: %s, Card UID: %s%n",
                 name, username, password, userType, cardUid);
-
-        // TODO: Validate and delegate to business logic
-    }
-    
-       public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("User Formulary");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setContentPane(new UserFormulary());
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
     }
 }
